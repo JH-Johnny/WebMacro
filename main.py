@@ -9,7 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 
 # pip install selenium
-# pip install webdriver_manager
+# pip install webdriver-manager
 # pip install pandas
 # pip install bs4
 # pip install openpyxl
