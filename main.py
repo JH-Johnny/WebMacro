@@ -7,6 +7,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
+from bs4 import BeautifulSoup
 
 # pip install selenium
 # pip install webdriver-manager
@@ -39,6 +40,10 @@ def Check_alert(driver):
         alert.accept()
         return 1
     except:
+        HTML = driver.page_source
+        soup = BeautifulSoup(HTML, "html.parser")
+        if soup.select('div#idResult')[0].text == '사용할 수 있는 아이디입니다.':
+            return 3
         return 0
 
 # Data Read
@@ -87,12 +92,14 @@ for i in Table_num:
     time.sleep(0.2)
     driver.find_element(By.XPATH, "//*[@id='searchForm']/div/div[1]/div[1]/div[3]/button").click()
     time.sleep(0.2)
-    if Check_alert(driver):
+    if Check_alert(driver) == 0:
         print("테이블 아이디 중복확인 오류")
+        driver.close()
         quit()
     driver.find_element(By.XPATH, "//*[@id='searchForm']/div/div[2]/div/button").click()
     if Check_alert(driver) != 2:
         print("테이블 등록 실패!")
+        driver.close()
         quit()
 
     # Table Column Data Create
@@ -137,3 +144,7 @@ for i in Table_num:
         Check_alert(driver)
     driver.get("http://scdata.new.acego.net/mng/bdTblMaster/list.do")
     time.sleep(0.2)
+
+print("모든 작업을 끝마쳤습니다. 3초후 프로그램이 종료됩니다.")
+time.sleep(3)
+driver.close()
